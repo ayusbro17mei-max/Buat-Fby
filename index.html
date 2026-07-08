@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Ayuz For You ❤️</title>
+    <!-- Menggunakan Tailwind CSS untuk mempermudah styling -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Font bergaya piksel/lucu -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Fredoka One', cursive; }
+        .bg-grid {
+            background-color: #f7e6e6;
+            background-image: radial-gradient(#ffb6c1 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        /* Efek mengambang untuk surat */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .floating { animation: float 3s ease-in-out infinite; }
+    </style>
+</head>
+<body class="bg-grid min-h-screen flex items-center justify-center overflow-hidden relative">
+
+    <!-- CONTAINER UTAMA -->
+    <div id="main-card" class="w-96 p-6 bg-white rounded-3xl border-4 border-pink-300 shadow-xl text-center relative z-10 transition-all duration-500">
+        
+        <!-- ================= HALAMAN 1: SURAT ================= -->
+        <div id="page-envelope" class="flex flex-col items-center justify-center gap-6">
+            <div class="bg-pink-100 border-2 border-pink-300 text-pink-600 px-4 py-2 rounded-full text-sm">
+                ❤️ From Ayuz For You ❤️
+            </div>
+            <!-- Ikon Surat (Floating) -->
+            <div id="btn-open-envelope" class="text-8xl cursor-pointer floating hover:scale-110 transition-transform">
+                ✉️
+            </div>
+            <p class="text-gray-500 text-xs">Aim for the heart 💘<br><span class="text-[10px]">Cupid never misses twice</span></p>
+        </div>
+
+        <!-- ================= HALAMAN 2: PERTANYAAN (Hidden Awal) ================= -->
+        <div id="page-question" class="hidden flex flex-col items-center gap-4">
+            <!-- Header ala Window Box -->
+            <div class="w-full flex justify-between items-center bg-pink-200 p-2 rounded-xl text-xs text-pink-700">
+                <span>LOVE.EXE</span>
+                <div class="flex gap-1">
+                    <span class="w-3 h-3 bg-red-400 rounded-full inline-block"></span>
+                    <span class="w-3 h-3 bg-yellow-400 rounded-full inline-block"></span>
+                    <span class="w-3 h-3 bg-green-400 rounded-full inline-block"></span>
+                </div>
+            </div>
+            
+            <h2 class="text-xl text-pink-600 mt-2">Mau balik tidak? <span class="text-red-500">❤️</span></h2>
+            
+            <!-- Karakter Lucu (Bisa diganti URL gambar kucing piksel) -->
+            <div class="text-6xl my-2">🐈‍⬛</div>
+
+            <!-- Area Tombol -->
+            <div class="flex gap-4 justify-center items-center w-full mt-4 h-12 relative">
+                <button id="btn-yes" class="bg-emerald-400 hover:bg-emerald-500 text-white font-bold px-6 py-2 rounded-xl shadow-md border-b-4 border-emerald-600 active:border-b-0 transition-all">
+                    YES
+                </button>
+                <button id="btn-no" class="bg-rose-400 text-white font-bold px-6 py-2 rounded-xl shadow-md border-b-4 border-rose-600 absolute transition-all duration-100 ease-out">
+                    NO
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= HALAMAN 3: SUKSES (Hidden Awal) ================= -->
+        <div id="page-success" class="hidden flex flex-col items-center gap-4">
+            <h2 class="text-2xl text-rose-500">Yayyy! I love you ❤️</h2>
+            <div class="text-7xl animate-bounce">🐈‍⬛💕</div>
+            <p class="text-sm text-gray-600">Yeayy Akhirnya balik!</p>
+            <span class="bg-pink-500 text-white px-4 py-1 rounded-full text-xs font-bold animate-pulse">I LOVE YOU</span>
+        </div>
+
+    </div>
+
+    <!-- Container untuk efek Hati Berjatuhan -->
+    <div id="hearts-container" class="absolute inset-0 pointer-events-none z-0"></div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Ambil elemen DOM
+        const pageEnvelope = document.getElementById('page-envelope');
+        const pageQuestion = document.getElementById('page-question');
+        const pageSuccess = document.getElementById('page-success');
+        
+        const btnOpenEnvelope = document.getElementById('btn-open-envelope');
+        const btnYes = document.getElementById('btn-yes');
+        const btnNo = document.getElementById('btn-no');
+        const heartsContainer = document.getElementById('hearts-container');
+
+        // 1. Logika Buka Surat
+        btnOpenEnvelope.addEventListener('click', () => {
+            pageEnvelope.classList.add('hidden');
+            pageQuestion.classList.remove('hidden');
+            resetNoButtonPosition();
+        });
+
+        // 2. Logika Tombol NO Menghindar (Kabur saat didekati)
+        function moveNoButton() {
+            // Menghitung batas area aman agar tombol tidak keluar dari card
+            const padding = 20;
+            const maxX = 120; // Jarak geser horizontal maksimal
+            const maxY = 40;  // Jarak geser vertikal maksimal
+
+            // Posisi acak (bisa minus atau plus)
+            const randomX = (Math.random() - 0.5) * maxX * 2;
+            const randomY = (Math.random() - 0.5) * maxY * 2;
+
+            btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }
+
+        // Memicu tombol kabur baik saat kursor mendekat (PC) atau disentuh (HP)
+        btnNo.addEventListener('mouseenter', moveNoButton);
+        btnNo.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Mencegah klik tidak sengaja pada mobile
+            moveNoButton();
+        });
+
+        function resetNoButtonPosition() {
+            // Mengatur posisi awal tombol NO di sebelah kanan tombol YES
+            btnNo.style.left = '55%';
+        }
+
+        // 3. Logika Tombol YES (Sukses)
+        btnYes.addEventListener('click', () => {
+            pageQuestion.classList.add('hidden');
+            pageSuccess.classList.remove('hidden');
+            
+            // Jalankan efek hujan hati
+            setInterval(createHeart, 150);
+        });
+
+        // 4. Fungsi Membuat Efek Hati Berjatuhan/Berterbangan
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('absolute', 'text-red-400', 'text-2xl', 'opacity-75');
+            heart.innerHTML = Math.random() > 0.5 ? '❤️' : '💖';
+            
+            // Posisi horizontal acak
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '-20px';
+            
+            // Kecepatan dan ukuran acak
+            const duration = Math.random() * 3 + 2; // antara 2 sampai 5 detik
+            heart.style.transition = `transform ${duration}s linear, opacity ${duration}s`;
+            heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+
+            heartsContainer.appendChild(heart);
+
+            // Jalankan animasi jatuh menggunakan setTimeout
+            setTimeout(() => {
+                heart.style.transform = `translateY(105vh) rotate(${Math.random() * 360}deg)`;
+            }, 50);
+
+            // Hapus elemen setelah selesai animasi agar browser tidak lemot
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+    </script>
+</body>
+</html>
